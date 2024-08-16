@@ -1,0 +1,9 @@
+.overallDiv {
+  border: 2px solid black;
+  height: 100vh;
+}
+
+.left{
+  border: 1px solid black;
+  height: 100vh;
+}

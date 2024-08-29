@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-function UserApps() {
+const UsersList =() => {
   const [users, setUser] = useState([]);
 
   useEffect(() => {
@@ -11,9 +11,16 @@ function UserApps() {
 
   const getData = async () => {
     let userData = await axios.get(
-      "https://66cb774e4290b1c4f19a69fe.mockapi.io/Attendence"
+      "https://66cf33e4901aab248421589a.mockapi.io/Attendence"
     );
     setUser(userData.data);
+  };
+  const handleDelete = async (id) => {
+    await axios.delete(
+      `https://66cf33e4901aab248421589a.mockapi.io/Attendence/${id}`
+    );
+    getData();
+    alert("user Deleted");
   };
 
   // Create     read      update     delete
@@ -28,12 +35,13 @@ function UserApps() {
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Name</th>
+            <th scope="col">firstName</th>
             <th scope="col">Tamil</th>
             <th scope="col">English</th>
             <th scope="col">Maths</th>
             <th scope="col">Science</th>
             <th scope="col">SocialScience</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -41,14 +49,24 @@ function UserApps() {
             return (
               <tr>
                 <th scope="row">{index + 1}</th>
-                <td>{item.name}</td>
+                <td>{item.firstName}</td>
                 <td>{item.Tamil}</td>
                 <td>{item.English}</td>
                 <td>{item.Maths}</td>
                 <td>{item.Science}</td>
                 <td>{item.SocialScience}</td>
-                <td><button>Edit</button></td>
-                <td><button>Delete</button></td>
+                <td>
+                  <Link to={`/edit/${item.id}`}
+                  className="btn btn-success btn-sm">
+                    Edit
+                  </Link>
+                
+                <button
+                className="btn btn-danger btn-sm" onClick={()=>{
+                  handleDelete(item.id);
+                }}
+                >Delete
+                </button></td>
               </tr>
             );
           })}
@@ -58,4 +76,4 @@ function UserApps() {
   );
 }
 
-export default UserApps;
+export default UsersList;

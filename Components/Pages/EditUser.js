@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import "./CreateUser.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const CreateUser = () => {
+function EditUser() {
   const navigate = useNavigate();
+  const params = useParams();
 
   const [userInput, setUserInput] = useState({
     firstName: "",
@@ -15,20 +15,33 @@ const CreateUser = () => {
     SocialScience:""
   });
 
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    const userData = await axios.get(
+      `https://66cf33e4901aab248421589a.mockapi.io/Attendence/${params.id}`
+    );
+
+    setUserInput(userData.data);
+  };
+
   const handleChange = ({ target: { value, name } }) => {
     setUserInput({ ...userInput, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const { firstName, age, email, mobile, password } = userInput;
 
-    await axios.post(
-      "https://66cb774e4290b1c4f19a69fe.mockapi.io/Attendence"
-      // userInput
+    const { firstName, Tamil, English, Maths, Science, SocialScience } = userInput;
+
+    await axios.put(
+      `https://66cf33e4901aab248421589a.mockapi.io/Attendence/${params.id}`,
+      {
+        firstName,Tamil, English, Maths, Science, SocialScience
+      }
     );
-
-    alert("User Registered Successfully");
 
     navigate("/");
   };
@@ -37,11 +50,11 @@ const CreateUser = () => {
     <div className="userRegisterForm">
       <form onSubmit={handleSubmit}>
         <h1 style={{ textAlign: "center" }} className="mb-5">
-          User Register
+          Edit User
         </h1>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">
-            First Name
+            firstName
           </label>
           <input
             type="text"
@@ -118,6 +131,6 @@ const CreateUser = () => {
       </form>
     </div>
   );
-};
+}
 
-export default CreateUser;
+export default EditUser;
